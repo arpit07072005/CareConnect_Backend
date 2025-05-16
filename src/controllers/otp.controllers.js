@@ -11,13 +11,13 @@ const sendOTP = asyncHandler(async (req, res) => {
   }
 
   const client = twilio(
-    process.env.TWILIO_ACCOUNT_SID,
-    process.env.TWILIO_ACCOUNT_AUTH
+    "AC0a76781b7b9d70053bc8d7e69f2e3c86",
+    "73c531ba966471860f1ef47d42433c0b"
   );
 
   try {
     const verification = await client.verify.v2
-      .services(process.env.TWILIO_SERVICE_ID)
+      .services("VAf5d95b1b91c9ced12d2a91718eadc52d")
       .verifications.create({ to: phone, channel: "sms" });
 
     res.status(200).json({ message: "OTP sent", status: verification.status });
@@ -35,13 +35,14 @@ const verifyOTP = asyncHandler(async (req, res) => {
   }
 
   const client = twilio(
-    process.env.TWILIO_ACCOUNT_SID,
-    process.env.TWILIO_ACCOUNT_AUTH
+     "AC0a76781b7b9d70053bc8d7e69f2e3c86",
+     "73c531ba966471860f1ef47d42433c0b"
+   
   );
 
   try {
     const verification_check = await client.verify.v2
-      .services(process.env.TWILIO_SERVICE_ID)
+      .services("VAf5d95b1b91c9ced12d2a91718eadc52d")
       .verificationChecks.create({ to: phone, code });
 
     if (verification_check.status === "approved") {
