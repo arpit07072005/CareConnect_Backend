@@ -11,7 +11,7 @@ const userDetails = asyncHandler(async(req,res)=>{
     throw new ApiError(400,"enter all madatory fields");
   }
   const existedclient = await client.findOne({
-    $or:[{fullName},{email}]
+    $or:[{email}]
   })
 
   if(existedclient){
@@ -27,7 +27,7 @@ const userDetails = asyncHandler(async(req,res)=>{
     
   })
 
-  const createdclient = await client.findById(newclient._id).select("-fullName -email");
+  const createdclient = await client.findById(newclient._id).select(" -email");
 
   return res.status(201).json(
     new ApiResponse(200,createdclient,"User registered successfully")
