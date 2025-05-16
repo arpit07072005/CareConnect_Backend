@@ -1,6 +1,6 @@
 import mongoose, {Schema} from "mongoose";
 
-const careGiverSchema = new Schema({
+const careGiverSchema = new mongoose.Schema({
     fullName:{
         type: String,
         required: [true,"full name is required"],
