@@ -5,6 +5,7 @@ import { getAllUser, registeruser } from "../controllers/user.controller.js";
 import { carddetail, paymentcontroller } from "../controllers/payment.controllers.js";
 import { userDetails } from "../controllers/client.controllers.js";
 import {  sendOTP, verifyOTP } from "../controllers/otp.controllers.js";
+import { gmailsend } from "../controllers/Gmailsend.controllers.js";
 
 const router= Router();
 
@@ -29,7 +30,8 @@ router.route("/create").post(paymentcontroller);
 router.route("/card-details").post(carddetail)
 router.route("/client").post(userDetails)
 router.route("/otp/send").post(sendOTP);       // Send OTP
-router.route("/otp/verify").post(verifyOTP);   // Verify OTP
+router.route("/otp/verify").post(verifyOTP);
+router.route("/gmail/send").post(gmailsend)   // Verify OTP
 
 
 export default router

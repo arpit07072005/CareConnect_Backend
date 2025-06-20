@@ -21,19 +21,12 @@ app.use(cookieParser())
 
 // routes
 
-import  userRegister  from "./routes/careGiver.routes.js";
+
 import Registeruser from "./routes/careGiver.routes.js"
 import { errorHandler } from "./middlewares/error.middleware.js";
-import payment from "./routes/careGiver.routes.js"
-import client from "./routes/careGiver.routes.js"
-import otp from "./routes/careGiver.routes.js"
 
-
-app.use("/api/v1/caregiver",userRegister)
 app.use("/api/v1/user",Registeruser)
-app.use("/api/v1/payment",payment)
-app.use("/api/v1/user",client)
-app.use("/api/v1/user",otp)
+
 
 
 app.use(errorHandler)
