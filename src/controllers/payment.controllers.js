@@ -31,8 +31,8 @@ try{
 const carddetail = asyncHandler(async(req,res)=>{
   try{
     const instance = new Razorpay({
-      key_id:"rzp_test_Q7oKfaXRA0EIVg",
-      key_secret:"jWZ4iWZ1wwAagzHDvDTTOcMh"
+      key_id:"rzp_live_FAXcyObQMitnKC",
+      key_secret:"obt0PvhlzI7gqwdyNaT67paR"
     })
   
     const{id}=req.body
