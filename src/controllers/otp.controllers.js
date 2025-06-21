@@ -1,27 +1,36 @@
 // controllers/otpController.js
+import { ApiError } from "../utils/ApiError.js";
 import { asyncHandler } from "../utils/asyncHandle.js";
 import twilio from "twilio";
 
 // Send OTP to phone number
+const accountsid = process.env.TWILIO_ACCOUNT_SID;
+const authtoken = process.env.TWILIO_AUTH_TOKEN;
+const servicesid = process.env.TWILIO_SERVICE_ID;
+
+const client = twilio(accountsid,authtoken,servicesid)
 const sendOTP = asyncHandler(async (req, res) => {
-  const { phone } = req.body;
+   const { number } = req.body;
 
-  if (!phone) {
-    return res.status(400).json({ message: "Phone number is required" });
+  if (!number) {
+    throw new ApiError(400, "Please enter the number");
   }
-
-  const client = twilio(
-    process.env.TWILIO_ACCOUNT_SID,
-    process.env.TWILIO_ACCOUNT_AUTH
-  );
 
   try {
     const verification = await client.verify.v2
-      .services(process.env.TWILIO_SERVICE_ID)
-      .verifications.create({ to: phone, channel: "sms" });
+      .services(servicesid)
+      .verifications.create({
+        to: `+91${number}`,
+        channel: "sms",
+      });
 
-    res.status(200).json({ message: "OTP sent", status: verification.status });
+    res.status(200).json({
+      success: true,
+      message: "OTP sent successfully",
+      sid: verification.sid,
+    });
   } catch (error) {
+    console.log("Error in sending OTP:", error);
     res.status(500).json({ message: "Failed to send OTP", error: error.message });
   }
 });
@@ -34,15 +43,13 @@ const verifyOTP = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "Phone and OTP code are required" });
   }
 
-  const client = twilio(
-    process.env.TWILIO_ACCOUNT_SID,
-    process.env.TWILIO_ACCOUNT_AUTH
-  );
-
   try {
     const verification_check = await client.verify.v2
-      .services(process.env.TWILIO_SERVICE_ID)
-      .verificationChecks.create({ to: phone, code });
+      .services(servicesid)
+      .verificationChecks.create({
+        to: `+91${phone}`,
+        code,
+      });
 
     if (verification_check.status === "approved") {
       res.status(200).json({ message: "OTP verified successfully" });
