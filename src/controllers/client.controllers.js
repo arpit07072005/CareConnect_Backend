@@ -33,6 +33,18 @@ const userDetails = asyncHandler(async(req,res)=>{
     new ApiResponse(200,createdclient,"User registered successfully")
   )
 })
+const getAllClient = asyncHandler(async (req,res)=>{
+  try{
+    const loggedinclient= await client.find();
+    if(!loggedinclient){
+      throw new ApiError(400,"no user found")
+    }
+    return res.status(200).json(new ApiResponse(200,loggedinclient,"client logged in successfully"))
+  }catch(error){
+    console.log("error while fetching")
+  }
 
-export {userDetails}
+})
+
+export {userDetails ,getAllClient }
 

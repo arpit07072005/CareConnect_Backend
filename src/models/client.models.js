@@ -14,7 +14,7 @@ const ClientSchema = new mongoose.Schema({
    phoneNumber:{
     type:String,
     required:true,
-    unique:true
+    
    },
    service:{
      type:String,
@@ -24,7 +24,7 @@ const ClientSchema = new mongoose.Schema({
    address:{
     type:String,
     required:true,
-    unique:true
+    
    }
 },{timestamps:true})
  export const client = mongoose.model("client",ClientSchema)

@@ -3,7 +3,7 @@ import { upload } from "../middlewares/multer.middleware.js";
 import { getAllCareGivers, registerCareGiver } from "../controllers/careGiver.controller.js";
 import { getAllUser, registeruser } from "../controllers/user.controller.js";
 import { carddetail, paymentcontroller } from "../controllers/payment.controllers.js";
-import { userDetails } from "../controllers/client.controllers.js";
+import { getAllClient, userDetails } from "../controllers/client.controllers.js";
 import {  sendOTP, verifyOTP } from "../controllers/otp.controllers.js";
 import { gmailsendcaregiver, gmailsendclient } from "../controllers/Gmailsend.controllers.js";
 
@@ -29,6 +29,7 @@ router.route("/signup/register").post(registeruser)
 router.route("/create").post(paymentcontroller);
 router.route("/card-details").post(carddetail)
 router.route("/client").post(userDetails)
+router.route("/client/fetch").get(getAllClient)
 router.route("/otp/send").post(sendOTP);       // Send OTP
 router.route("/otp/verify").post(verifyOTP);
 router.route("/gmail/send/caregiver").post(gmailsendcaregiver)
