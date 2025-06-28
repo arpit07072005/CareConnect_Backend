@@ -6,8 +6,8 @@ import Razorpay from "razorpay";
 const paymentcontroller = asyncHandler(async(req , res )=>{
 try{
   const instance = new Razorpay({
-    key_id:"rzp_test_Q7oKfaXRA0EIVg",
-    key_secret:"jWZ4iWZ1wwAagzHDvDTTOcMh"
+    key_id:"rzp_live_Jj7Ffl3Nldxuhu",
+      key_secret:"A84SFV3SWXRoDalVl1fkhOA8"
   })
 
   const{order_id,amount,payment_capture,currency}=req.body
@@ -31,8 +31,8 @@ try{
 const carddetail = asyncHandler(async(req,res)=>{
   try{
     const instance = new Razorpay({
-      key_id:"rzp_live_FAXcyObQMitnKC",
-      key_secret:"obt0PvhlzI7gqwdyNaT67paR"
+      key_id:"rzp_live_Jj7Ffl3Nldxuhu",
+      key_secret:"A84SFV3SWXRoDalVl1fkhOA8"
     })
   
     const{id}=req.body
