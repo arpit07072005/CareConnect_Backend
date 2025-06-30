@@ -64,7 +64,18 @@ const careGiverSchema = new mongoose.Schema({
          type: Boolean, 
          default: false ,
          required: [true, "Must mention atleast one language"]
-        }
+        },
+      completedBookings: [
+  {
+    clientName: String,
+    clientEmail: String,
+    clientAddress: String,
+    clientPhone: String,
+    paymentId: String,
+    completedAt: { type: Date, default: Date.now }
+  }
+],
+
     },
     { timestamps: true }
 )

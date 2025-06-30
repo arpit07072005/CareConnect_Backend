@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { upload } from "../middlewares/multer.middleware.js";
-import { getAllCareGivers, registerCareGiver } from "../controllers/careGiver.controller.js";
+import { caregiverdashboard, getAllCareGivers, registerCareGiver } from "../controllers/careGiver.controller.js";
 import { getAllUser, registeruser } from "../controllers/user.controller.js";
 import { carddetail, paymentcontroller } from "../controllers/payment.controllers.js";
 import { getAllClient, userDetails } from "../controllers/client.controllers.js";
@@ -34,6 +34,7 @@ router.route("/otp/send").post(sendOTP);       // Send OTP
 router.route("/otp/verify").post(verifyOTP);
 router.route("/gmail/send/caregiver").post(gmailsendcaregiver)
 router.route("/gmail/send/client").post(gmailsendclient)
+router.route("/mark-complete").post(caregiverdashboard)
    // Verify OTP
 
 

@@ -112,9 +112,33 @@ const registerCareGiver= asyncHandler( async (req,res) => {
         console.log(err);
         
         throw new ApiError(500, "Something went wrong while fetching the details")
-    }
+}
 });
 
+// Push new data
+
+const caregiverdashboard = asyncHandler(async(req,res)=>{
+  try {
+    const { caregiverName, bookingDetails } = req.body;
+
+    const caregiver = await CareGiver.findOne({fullName:caregiverName});
+    if (!caregiver) {
+      return res.status(404).json({ message: "Caregiver not found" });
+    }
+
+   caregiver.completedBookings.push({
+      ...bookingDetails,
+      completedAt: new Date()
+    });
+    await caregiver.save();
+
+    res.status(200).json({ message: "Booking marked as completed" });
+  } catch (err) {
+    console.error("Error marking booking complete:", err);
+    res.status(500).json({ message: "Server Error", error: err });
+  }
+})
+
 export{
-    registerCareGiver, getAllCareGivers
+    registerCareGiver, getAllCareGivers ,caregiverdashboard
 }
