@@ -36,5 +36,12 @@ const ClientSchema = new mongoose.Schema({
     completedAt: { type: Date, default: Date.now }
   }
 ],
+feedback: [
+  {
+    Rating: { type: String },  // or Number
+    Review: { type: String },
+    completedAt: { type: Date }
+  }
+]
 },{timestamps:true})
  export const client = mongoose.model("client",ClientSchema)

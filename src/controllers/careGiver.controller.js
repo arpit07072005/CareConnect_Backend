@@ -139,24 +139,30 @@ const caregiverdashboard = asyncHandler(async(req,res)=>{
   }
 })
 
-// const onecaregiver = asyncHandler(async(req,res)=>{
-//   try{
-//     const {caregivername}=req.query
-//     if(!caregivername){
-//         throw new ApiError(400,"please enter the caregiver name");
-//     }
-//     const requiredCaregiver =await CareGiver.findOne({fullName:caregivername})
-//     if(!requiredCaregiver){
-//         throw new ApiError(400,"Caregiver not found in database")
-//     }
-//     res.status(200).json(new ApiResponse(201,requiredCaregiver,"Caregiver fetched successfully"));
+const caregiverrating = asyncHandler(async(req,res)=>{
+  try{
+    const{caregiverName ,ratingreview}=req.body;
+    if(!caregiverName || !ratingreview){
+      throw new ApiError(500,"Enter all mandatory fields");
+    }
+    const findcaregiver = await CareGiver.findOne({fullName:caregiverName})
+     if(!findcaregiver){
+      throw new ApiError(400,"Client not found in db");
+    }
+    findcaregiver.feedback.push({
+      ...ratingreview,
+      completedAt: new Date()
+    })
+    await findcaregiver.save()
+     res.status(200).json(new ApiResponse(200,"Successfully rated",findcaregiver ));
 
-//   }catch(error){
-//     console.log("error in fetching caregiver");
-//      throw new ApiError(500, "Something went wrong while fetching caregiver details");
-//   }
-// })
+  }catch(error){
+    res.status(500).json( new ApiError(500,"Server Error"))
+    console.log("error")
+  }
+
+})
 
 export{
-    registerCareGiver, getAllCareGivers ,caregiverdashboard 
+    registerCareGiver, getAllCareGivers ,caregiverdashboard ,caregiverrating
 }

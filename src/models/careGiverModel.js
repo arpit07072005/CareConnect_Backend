@@ -75,6 +75,13 @@ const careGiverSchema = new mongoose.Schema({
     completedAt: { type: Date, default: Date.now }
   }
 ],
+feedback: [
+  {
+    Rating: { type: String },  // or Number
+    Review: { type: String },
+    completedAt: { type: Date }
+  }
+]
 
     },
     { timestamps: true }

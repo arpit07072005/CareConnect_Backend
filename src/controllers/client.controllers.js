@@ -68,5 +68,29 @@ const clientdashboard = asyncHandler(async(req,res)=>{
   }
 })
 
-export {userDetails ,getAllClient ,clientdashboard}
+const clientrating = asyncHandler(async(req,res)=>{
+  try{
+    const{clientName ,ratingreview}=req.body;
+    if(!clientName || !ratingreview){
+      throw new ApiError(500,"Enter all mandatory fields");
+    }
+    const findclient = await client.findOne({fullName:clientName})
+     if(!findclient){
+      throw new ApiError(400,"Client not found in db");
+    }
+    findclient.feedback.push({
+      ...ratingreview,
+      completedAt: new Date()
+    })
+    await findclient.save()
+     res.status(200).json(new ApiResponse(200,"Successfully rated",findclient ));
+
+  }catch(error){
+    res.status(500).json( new ApiError(500,"Server Error"))
+    console.log("error")
+  }
+
+})
+
+export {userDetails ,getAllClient ,clientdashboard , clientrating}
 
