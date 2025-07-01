@@ -24,7 +24,17 @@ const ClientSchema = new mongoose.Schema({
    address:{
     type:String,
     required:true,
-    
-   }
+  },
+   completedBookings: [
+  {
+    caregiverName: String,
+    caregiverEmail: String,
+    caregiverImage: String,
+    caregiverAadhar:String,
+    caregiverPhone: String,
+    paymentId: String,
+    completedAt: { type: Date, default: Date.now }
+  }
+],
 },{timestamps:true})
  export const client = mongoose.model("client",ClientSchema)

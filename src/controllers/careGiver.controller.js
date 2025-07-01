@@ -139,6 +139,24 @@ const caregiverdashboard = asyncHandler(async(req,res)=>{
   }
 })
 
+// const onecaregiver = asyncHandler(async(req,res)=>{
+//   try{
+//     const {caregivername}=req.query
+//     if(!caregivername){
+//         throw new ApiError(400,"please enter the caregiver name");
+//     }
+//     const requiredCaregiver =await CareGiver.findOne({fullName:caregivername})
+//     if(!requiredCaregiver){
+//         throw new ApiError(400,"Caregiver not found in database")
+//     }
+//     res.status(200).json(new ApiResponse(201,requiredCaregiver,"Caregiver fetched successfully"));
+
+//   }catch(error){
+//     console.log("error in fetching caregiver");
+//      throw new ApiError(500, "Something went wrong while fetching caregiver details");
+//   }
+// })
+
 export{
-    registerCareGiver, getAllCareGivers ,caregiverdashboard
+    registerCareGiver, getAllCareGivers ,caregiverdashboard 
 }

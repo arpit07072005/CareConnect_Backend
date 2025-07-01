@@ -1,4 +1,4 @@
-import { client } from "../models/client.models.js";
+import { client} from "../models/client.models.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandle.js";
@@ -46,5 +46,27 @@ const getAllClient = asyncHandler(async (req,res)=>{
 
 })
 
-export {userDetails ,getAllClient }
+const clientdashboard = asyncHandler(async(req,res)=>{
+  try {
+    const { clientName, bookingDetails } = req.body;
+
+    const clientdetails = await client.findOne({fullName:clientName});
+    if (!clientdetails) {
+      return res.status(404).json({ message: "Client not found" });
+    }
+
+   clientdetails.completedBookings.push({
+      ...bookingDetails,
+      completedAt: new Date()
+    });
+    await clientdetails.save();
+
+    res.status(200).json({ message: "Booking marked as completed" });
+  } catch (err) {
+    console.error("Error marking booking complete:", err);
+    res.status(500).json({ message: "Server Error", error: err });
+  }
+})
+
+export {userDetails ,getAllClient ,clientdashboard}
 
