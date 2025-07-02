@@ -1,64 +1,80 @@
 // controllers/otpController.js
 import { ApiError } from "../utils/ApiError.js";
 import { asyncHandler } from "../utils/asyncHandle.js";
-import twilio from "twilio";
+import nodemailer from "nodemailer";
 
-// Send OTP to phone number
-const accountsid = process.env.TWILIO_ACCOUNT_SID;
-const authtoken = process.env.TWILIO_AUTH_TOKEN;
-const servicesid = process.env.TWILIO_SERVICE_ID;
+// Temporary in-memory store (in production, use DB or Redis)
+const otpStore = new Map();
 
-const client = twilio(accountsid,authtoken,servicesid)
+// Configure Nodemailer
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "ziya7376502028@gmail.com",
+      pass: "pujctdoeojaiiisj",     // app password (not your email password)
+  },
+});
+
+// Send OTP to email
 const sendOTP = asyncHandler(async (req, res) => {
-   const { number } = req.body;
+  const { email } = req.body;
 
-  if (!number) {
-    throw new ApiError(400, "Please enter the number");
+  if (!email) {
+    throw new ApiError(400, "Please provide an email address");
   }
 
-  try {
-    const verification = await client.verify.v2
-      .services(servicesid)
-      .verifications.create({
-        to: `+91${number}`,
-        channel: "sms",
-      });
+  // Generate a 6-digit OTP
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-    res.status(200).json({
-      success: true,
-      message: "OTP sent successfully",
-      sid: verification.sid,
-    });
+  // Save OTP with expiry (5 minutes)
+  otpStore.set(email, {
+    code: otp,
+    expiresAt: Date.now() + 5 * 60 * 1000,
+  });
+
+  // Send email
+  const mailOptions = {
+    from: "ziya7376502028@gmail.com",
+    to: email,
+    subject: "Your OTP for Verification",
+    text: `Your OTP is ${otp}. It will expire in 5 minutes.`,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    res.status(200).json({ success: true, message: "OTP sent to email" });
   } catch (error) {
-    console.log("Error in sending OTP:", error);
+    console.error("Error sending OTP email:", error);
     res.status(500).json({ message: "Failed to send OTP", error: error.message });
   }
 });
 
-// Verify the OTP entered by user
+// Verify OTP
 const verifyOTP = asyncHandler(async (req, res) => {
-  const { phone, code } = req.body;
+  const { email, code } = req.body;
 
-  if (!phone || !code) {
-    return res.status(400).json({ message: "Phone and OTP code are required" });
+  if (!email || !code) {
+    return res.status(400).json({ message: "Email and OTP code are required" });
   }
 
-  try {
-    const verification_check = await client.verify.v2
-      .services(servicesid)
-      .verificationChecks.create({
-        to: `+91${phone}`,
-        code,
-      });
+  const otpData = otpStore.get(email);
 
-    if (verification_check.status === "approved") {
-      res.status(200).json({ message: "OTP verified successfully" });
-    } else {
-      res.status(400).json({ message: "Invalid OTP" });
-    }
-  } catch (error) {
-    res.status(500).json({ message: "OTP verification failed", error: error.message });
+  if (!otpData) {
+    return res.status(400).json({ message: "OTP not found. Please request again." });
   }
+
+  if (Date.now() > otpData.expiresAt) {
+    otpStore.delete(email);
+    return res.status(400).json({ message: "OTP expired. Please request a new one." });
+  }
+
+  if (otpData.code !== code) {
+    return res.status(400).json({ message: "Invalid OTP" });
+  }
+
+  otpStore.delete(email); // OTP used up
+
+  res.status(200).json({ message: "OTP verified successfully" });
 });
 
 export { sendOTP, verifyOTP };
